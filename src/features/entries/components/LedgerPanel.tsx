@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetClose } from '@/components/ui/sheet'
 import { DeleteEntryDialog } from './DeleteEntryDialog'
 import type { Entry } from '@/types/entry'
 import { cn } from '@/lib/utils'
+import { haptic } from '@/lib/haptics'
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Utensils, Car, ShoppingBag, Music, HeartPulse, Zap, Home, BookOpen,
@@ -66,9 +67,9 @@ function EntryRow({ entry, onDelete }: EntryRowProps) {
           {isExpense ? '−' : '+'}{formatAmount(entry.amount)}
         </span>
         <button
-          onClick={onDelete}
+          onClick={() => { haptic('light'); onDelete() }}
           aria-label="Delete entry"
-          className="flex size-6 items-center justify-center rounded-full text-ink-3 opacity-0 transition-all hover:bg-rose-pale hover:text-rose group-hover:opacity-100"
+          className="flex size-7 items-center justify-center rounded-full text-ink-3 opacity-0 transition-all hover:bg-rose-pale hover:text-rose group-hover:opacity-100 [@media(hover:none)]:opacity-100"
         >
           <Trash2 size={12} />
         </button>
@@ -95,12 +96,14 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
   const isCurrentMonth = viewYear === now.getFullYear() && viewMonth === now.getMonth()
 
   function prevMonth() {
+    haptic('light')
     if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11) }
     else setViewMonth(m => m - 1)
   }
 
   function nextMonth() {
     if (isCurrentMonth) return
+    haptic('light')
     if (viewMonth === 11) { setViewYear(y => y + 1); setViewMonth(0) }
     else setViewMonth(m => m + 1)
   }
@@ -139,7 +142,7 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
           className="flex flex-col gap-0 bg-paper-2 p-0 sm:max-w-sm"
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-border px-6 py-5">
+          <div className="flex items-center justify-between border-b border-border px-4 py-4 sm:px-6 sm:py-5">
             <div>
               <h2 className="font-serif text-xl font-bold text-ink">your ledger</h2>
               <p className="font-sans text-xs text-ink-3">everything you've logged</p>
@@ -147,7 +150,7 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
             <SheetClose asChild>
               <button
                 aria-label="Close ledger"
-                className="flex size-7 items-center justify-center rounded-full bg-paper-3 text-ink-2 transition-colors hover:text-ink"
+                className="flex size-9 items-center justify-center rounded-full bg-paper-3 text-ink-2 transition-colors hover:text-ink"
               >
                 <X size={13} />
               </button>
@@ -155,11 +158,11 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
           </div>
 
           {/* Month nav */}
-          <div className="flex items-center justify-between border-b border-border px-6 py-3">
+          <div className="flex items-center justify-between border-b border-border px-4 py-2 sm:px-6">
             <button
               onClick={prevMonth}
               aria-label="Previous month"
-              className="flex size-7 items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-paper-3 hover:text-ink"
+              className="flex size-9 items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-paper-3 hover:text-ink"
             >
               <ChevronLeft size={16} />
             </button>
@@ -170,14 +173,14 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
               onClick={nextMonth}
               disabled={isCurrentMonth}
               aria-label="Next month"
-              className="flex size-7 items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-paper-3 hover:text-ink disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex size-9 items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-paper-3 hover:text-ink disabled:cursor-not-allowed disabled:opacity-30"
             >
               <ChevronRight size={16} />
             </button>
           </div>
 
           {/* Entries */}
-          <div className="flex-1 overflow-y-auto px-4 py-4">
+          <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-4">
             {grouped.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <p className="font-serif text-lg font-semibold text-ink">Nothing here yet.</p>

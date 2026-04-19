@@ -33,7 +33,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1100px] px-6 pt-28 pb-16">
+    <main className="mx-auto max-w-[1100px] px-4 pt-24 pb-16 sm:px-6 sm:pt-28">
       {/* Ledger tab — fixed to right edge */}
       <button
         onClick={() => setLedgerOpen(true)}

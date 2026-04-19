@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogClose,
 } from '@/components/ui/dialog'
+import { haptic } from '@/lib/haptics'
 
 interface DeleteEntryDialogProps {
   open: boolean
@@ -17,6 +18,7 @@ interface DeleteEntryDialogProps {
 
 export function DeleteEntryDialog({ open, onOpenChange, onConfirm, entryLabel }: DeleteEntryDialogProps) {
   function handleConfirm() {
+    haptic('medium')
     onConfirm()
     onOpenChange(false)
   }

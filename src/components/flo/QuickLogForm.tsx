@@ -8,6 +8,7 @@ import { FloDatePicker } from './FloDatePicker'
 import { cn } from '@/lib/utils'
 import { entryFormSchema, type EntryFormData } from '@/features/entries/entrySchema'
 import { getCategoriesForType, type Category } from '@/lib/categories'
+import { haptic } from '@/lib/haptics'
 
 export interface QuickLogFormProps {
   onSubmit: (data: EntryFormData) => void
@@ -61,7 +62,7 @@ function Step1({ form, onNext }: Step1Props) {
           <button
             key={t}
             type="button"
-            onClick={() => { setValue('type', t); setValue('categoryKey', '') }}
+            onClick={() => { haptic('light'); setValue('type', t); setValue('categoryKey', '') }}
             className={cn(
               'flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 font-sans text-sm font-semibold transition-all duration-200',
               selectedType === t
@@ -276,10 +277,11 @@ export function QuickLogForm({ onSubmit, defaultType = 'expense' }: QuickLogForm
   async function handleNext() {
     const fields: (keyof EntryFormData)[] = step === 1 ? ['type', 'amount'] : ['categoryKey']
     const valid = await form.trigger(fields)
-    if (valid) advance()
+    if (valid) { haptic('light'); advance() }
   }
 
   function handleCategorySelect(key: string) {
+    haptic('light')
     form.setValue('categoryKey', key, { shouldValidate: true })
     setTimeout(advance, 160)
   }
