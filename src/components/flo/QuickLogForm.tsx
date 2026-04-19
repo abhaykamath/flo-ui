@@ -277,11 +277,11 @@ export function QuickLogForm({ onSubmit, defaultType = 'expense' }: QuickLogForm
   async function handleNext() {
     const fields: (keyof EntryFormData)[] = step === 1 ? ['type', 'amount'] : ['categoryKey']
     const valid = await form.trigger(fields)
-    if (valid) { haptic('light'); advance() }
+    if (valid) { haptic('medium'); advance() }
   }
 
   function handleCategorySelect(key: string) {
-    haptic('light')
+    haptic('medium')
     form.setValue('categoryKey', key, { shouldValidate: true })
     setTimeout(advance, 160)
   }

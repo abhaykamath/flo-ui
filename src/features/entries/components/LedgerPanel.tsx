@@ -67,7 +67,7 @@ function EntryRow({ entry, onDelete }: EntryRowProps) {
           {isExpense ? '−' : '+'}{formatAmount(entry.amount)}
         </span>
         <button
-          onClick={() => { haptic('light'); onDelete() }}
+          onClick={() => { haptic('medium'); onDelete() }}
           aria-label="Delete entry"
           className="flex size-7 items-center justify-center rounded-full text-ink-3 opacity-0 transition-all hover:bg-rose-pale hover:text-rose group-hover:opacity-100 [@media(hover:none)]:opacity-100"
         >

@@ -18,7 +18,7 @@ interface DeleteEntryDialogProps {
 
 export function DeleteEntryDialog({ open, onOpenChange, onConfirm, entryLabel }: DeleteEntryDialogProps) {
   function handleConfirm() {
-    haptic('medium')
+    haptic('strong')
     onConfirm()
     onOpenChange(false)
   }
