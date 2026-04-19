@@ -329,7 +329,7 @@ This is the exact card that should appear in the showcase page under Typography:
 - ❌ Use DM Sans for headings or financial amounts
 - ❌ Use `font-weight: 800` or `900` — Lora tops at 700, DM Sans use max 700
 - ❌ Use arbitrary font sizes not in the scale
-- ❌ Use pure black (`#000`) for text — always `var(--color-ink)` (#2A2118)
+- ❌ Use pure black (`#000`) for text — always `var(--color-ink)` (#261E16)
 - ❌ Use `text-gray-*` — use `text-ink-2` or `text-ink-3`
 - ❌ Mix serif and sans in the same UI label or heading
 - ❌ Use uppercase DM Sans at sizes above 0.75rem (eyebrows only)

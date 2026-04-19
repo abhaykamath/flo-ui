@@ -20,7 +20,7 @@
   --color-paper-3: #EDE6D6;
 
   /* Ink — warm near-black text */
-  --color-ink: #2A2118;
+  --color-ink: #261E16;
   --color-ink-2: #6E5C48;
   --color-ink-3: #A89880;
 
@@ -51,11 +51,11 @@
   --color-positive: #8FB89A;
   --color-negative: #C05050;
   --color-warning: #D4C44A;
-  --color-border-raw: rgba(42, 33, 24, 0.10);
-  --color-border-strong: rgba(42, 33, 24, 0.20);
+  --color-border-raw: rgba(38, 30, 22, 0.10);
+  --color-border-strong: rgba(38, 30, 22, 0.20);
 
   /* Dark surface */
-  --color-dark: #2A2118;
+  --color-dark: #261E16;
   --color-dark-text: #FAF7F0;
 
   /* ─── Layout ─── */
@@ -69,40 +69,40 @@
   --flo-radius-full: 9999px;
 
   /* ─── Shadows ─── */
-  --flo-shadow-sm: 0 2px 8px rgba(42, 33, 24, 0.06);
-  --flo-shadow-md: 0 6px 20px rgba(42, 33, 24, 0.08);
-  --flo-shadow-lg: 0 12px 40px rgba(42, 33, 24, 0.10);
+  --flo-shadow-sm: 0 2px 8px rgba(38, 30, 22, 0.06);
+  --flo-shadow-md: 0 6px 20px rgba(38, 30, 22, 0.08);
+  --flo-shadow-lg: 0 12px 40px rgba(38, 30, 22, 0.10);
 
   /* ─── shadcn variable overrides (mapped to Flo) ─── */
   --background: #FAF7F0;
-  --foreground: #2A2118;
+  --foreground: #261E16;
   --card: #FFFFFF;
-  --card-foreground: #2A2118;
+  --card-foreground: #261E16;
   --popover: #FFFFFF;
-  --popover-foreground: #2A2118;
-  --primary: #2A2118;
+  --popover-foreground: #261E16;
+  --primary: #261E16;
   --primary-foreground: #FAF7F0;
   --secondary: #F4EFE4;
-  --secondary-foreground: #2A2118;
+  --secondary-foreground: #261E16;
   --muted: #EDE6D6;
   --muted-foreground: #6E5C48;
   --accent: #E8F2EA;
-  --accent-foreground: #2A2118;
+  --accent-foreground: #261E16;
   --destructive: #D4909A;
   --destructive-foreground: #FAF7F0;
-  --border: rgba(42, 33, 24, 0.10);
-  --input: rgba(42, 33, 24, 0.10);
+  --border: rgba(38, 30, 22, 0.10);
+  --input: rgba(38, 30, 22, 0.10);
   --ring: #8FB89A;
   --radius: 8px;
 
   /* sidebar */
   --sidebar: #F4EFE4;
-  --sidebar-foreground: #2A2118;
-  --sidebar-primary: #2A2118;
+  --sidebar-foreground: #261E16;
+  --sidebar-primary: #261E16;
   --sidebar-primary-foreground: #FAF7F0;
   --sidebar-accent: #E8F2EA;
-  --sidebar-accent-foreground: #2A2118;
-  --sidebar-border: rgba(42, 33, 24, 0.10);
+  --sidebar-accent-foreground: #261E16;
+  --sidebar-border: rgba(38, 30, 22, 0.10);
   --sidebar-ring: #8FB89A;
 }
 
@@ -342,8 +342,8 @@
   /* Graph paper background — hero only */
   .flo-graph-paper {
     background-image:
-      linear-gradient(rgba(42, 33, 24, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(42, 33, 24, 0.04) 1px, transparent 1px);
+      linear-gradient(rgba(38, 30, 22, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(38, 30, 22, 0.04) 1px, transparent 1px);
     background-size: 28px 28px;
   }
 

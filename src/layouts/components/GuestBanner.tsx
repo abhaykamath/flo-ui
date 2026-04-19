@@ -4,30 +4,36 @@ interface GuestBannerProps {
 
 export function GuestBanner({ onDismiss }: GuestBannerProps) {
   return (
-    <div className="animate-slide-down fixed inset-x-0 top-(--nav-height) z-40 flex items-center gap-4 bg-ink px-8 py-[0.55rem]">
-      <div className="flex items-center gap-[0.6rem]">
-        <div className="animate-blink size-[7px] shrink-0 rounded-full bg-lemon" />
+    <div className="animate-slide-down z-40 flex flex-col gap-2 bg-ink px-4 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-8 sm:py-[0.55rem]">
+
+      {/* Message + dismiss row on mobile */}
+      <div className="flex items-start gap-[0.6rem] sm:items-center">
+        <div className="animate-blink mt-[0.35rem] size-[7px] shrink-0 rounded-full bg-lemon sm:mt-0" />
         <p className="font-sans text-[0.75rem] font-normal text-paper/75">
           <strong className="font-semibold text-paper">You're in guest mode.</strong>{' '}
           Your data lives here for now — choose where to save it before you leave.
         </p>
       </div>
 
-      <div className="flex-1" />
+      <div className="hidden flex-1 sm:block" />
 
-      <button
-        className="shrink-0 whitespace-nowrap rounded-full border border-lemon/30 bg-lemon/[0.12] px-[0.8rem] py-[0.28rem] font-sans text-[0.72rem] font-semibold text-lemon transition-colors hover:bg-lemon/20"
-      >
-        Choose storage →
-      </button>
+      {/* Actions */}
+      <div className="flex items-center gap-3 pl-[1.3rem] sm:pl-0">
+        <button
+          className="shrink-0 whitespace-nowrap rounded-full border border-lemon/30 bg-lemon/[0.12] px-[0.8rem] py-[0.28rem] font-sans text-[0.72rem] font-semibold text-lemon transition-colors hover:bg-lemon/20"
+        >
+          Choose storage →
+        </button>
 
-      <button
-        onClick={onDismiss}
-        className="shrink-0 cursor-pointer px-1 text-[1rem] leading-none text-paper/35 transition-colors hover:text-paper/70"
-        aria-label="Dismiss"
-      >
-        ✕
-      </button>
+        <button
+          onClick={onDismiss}
+          className="shrink-0 cursor-pointer px-1 text-[1rem] leading-none text-paper/35 transition-colors hover:text-paper/70"
+          aria-label="Dismiss"
+        >
+          ✕
+        </button>
+      </div>
+
     </div>
   )
 }

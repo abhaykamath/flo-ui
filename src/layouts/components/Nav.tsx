@@ -14,7 +14,7 @@ export function Nav({ streakCount, streakLogged }: NavProps) {
 
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b-[1.5px] border-border bg-paper/[0.92] px-4 py-[0.8rem] backdrop-blur-[14px] sm:px-8">
+      <nav className="z-50 flex items-center justify-between border-b-[1.5px] border-border bg-paper/[0.92] px-4 py-[0.8rem] backdrop-blur-[14px] sm:px-8">
         <Link to="/home" className="flex items-center gap-[9px] no-underline">
           <img src={logoSrc} width="30" height="30" alt="Flo logo" />
           <span className="font-serif text-[1.3rem] font-bold tracking-[-0.5px] text-ink">Flo</span>

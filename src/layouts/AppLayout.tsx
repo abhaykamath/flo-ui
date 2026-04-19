@@ -15,7 +15,7 @@ export default function AppLayout() {
   const [bannerVisible, setBannerVisible] = useState(true)
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-paper">
+    <div className="flex h-screen flex-col overflow-hidden bg-paper">
       <Nav
         streakCount={1}
         streakLogged={streakLogged}
@@ -27,7 +27,9 @@ export default function AppLayout() {
         />
       )}
 
-      <Outlet context={{ streakLogged, setStreakLogged, bannerVisible } satisfies AppLayoutContext} />
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <Outlet context={{ streakLogged, setStreakLogged, bannerVisible } satisfies AppLayoutContext} />
+      </div>
     </div>
   )
 }
