@@ -230,6 +230,32 @@
 /* ─────────────────────────────────────────────────────────
    BASE STYLES
    ───────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────
+   CUSTOM SCROLLBAR — subtle, warm, Flo-toned
+   ───────────────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-paper-3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-paper-3);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-ink-3);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -344,7 +370,7 @@
     background-image:
       linear-gradient(rgba(38, 30, 22, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(38, 30, 22, 0.04) 1px, transparent 1px);
-    background-size: 28px 28px;
+    background-size: calc(100dvw / 64) calc(100dvw / 64);
   }
 
   /* Streak section background */

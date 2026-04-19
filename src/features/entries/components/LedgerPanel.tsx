@@ -108,6 +108,14 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
     else setViewMonth(m => m + 1)
   }
 
+  const monthSummary = useMemo(() => {
+    const prefix = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}`
+    const filtered = entries.filter(e => e.date.startsWith(prefix))
+    const income  = filtered.filter(e => e.type === 'income').reduce((s, e) => s + e.amount, 0)
+    const expense = filtered.filter(e => e.type === 'expense').reduce((s, e) => s + e.amount, 0)
+    return { income, expense, net: income - expense }
+  }, [entries, viewYear, viewMonth])
+
   const grouped = useMemo(() => {
     const prefix = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}`
     const filtered = entries.filter(e => e.date.startsWith(prefix))
@@ -143,9 +151,14 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border px-4 py-4 sm:px-6 sm:py-5">
-            <div>
-              <h2 className="font-serif text-xl font-bold text-ink">your ledger</h2>
-              <p className="font-sans text-xs text-ink-3">everything you've logged</p>
+            <div className="flex items-center gap-2.5">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-(--color-paper-3)">
+                <BookOpen size={14} className="text-ink-2" />
+              </div>
+              <div>
+                <h2 className="font-serif text-xl font-bold text-ink">your ledger</h2>
+                <p className="font-sans text-xs text-ink-3">everything you've logged</p>
+              </div>
             </div>
             <SheetClose asChild>
               <button
@@ -177,6 +190,27 @@ export function LedgerPanel({ open, onOpenChange, entries, onDeleteEntry }: Ledg
             >
               <ChevronRight size={16} />
             </button>
+          </div>
+
+          {/* Monthly summary */}
+          <div className="grid grid-cols-3 divide-x divide-border border-b border-border">
+            <div className="flex flex-col items-center py-3">
+              <span className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink-3">In</span>
+              <span className="mt-0.5 font-serif text-sm font-bold text-sage">+{formatAmount(monthSummary.income)}</span>
+            </div>
+            <div className="flex flex-col items-center py-3">
+              <span className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink-3">Out</span>
+              <span className="mt-0.5 font-serif text-sm font-bold text-peach">−{formatAmount(monthSummary.expense)}</span>
+            </div>
+            <div className="flex flex-col items-center py-3">
+              <span className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink-3">Net</span>
+              <span className={cn(
+                'mt-0.5 font-serif text-sm font-bold',
+                monthSummary.net >= 0 ? 'text-sage' : 'text-peach',
+              )}>
+                {monthSummary.net >= 0 ? '+' : '−'}{formatAmount(Math.abs(monthSummary.net))}
+              </span>
+            </div>
           </div>
 
           {/* Entries */}

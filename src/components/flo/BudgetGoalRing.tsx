@@ -1,4 +1,4 @@
-import { Target } from 'lucide-react'
+import { Target, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { GOAL_RING_SIZE, GOAL_RING_STROKE } from '@/lib/constants'
 
@@ -6,20 +6,24 @@ export interface BudgetGoalRingProps {
   label: string
   current: number
   target: number
+  /** Optional emoji shown in the ring center instead of the default target icon */
+  emoji?: string
   monthlyRate?: number
   projectedDate?: string
+  /** When set, renders a CTA row at the bottom of the card */
+  showCta?: boolean
   className?: string
 }
 
 const R = (GOAL_RING_SIZE - GOAL_RING_STROKE) / 2
 const C = 2 * Math.PI * R
 
-function BudgetGoalRing({ label, current, target, monthlyRate, projectedDate, className }: BudgetGoalRingProps) {
+const fmt = (n: number) =>
+  `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(n)}`
+
+function BudgetGoalRing({ label, current, target, emoji, monthlyRate, projectedDate, showCta, className }: BudgetGoalRingProps) {
   const pct    = Math.min(current / target, 1)
   const filled = pct * C
-
-  const fmt = (n: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
 
   return (
     <div className={cn('flo-card flex flex-col items-center gap-4 p-6', className)}>
@@ -36,7 +40,10 @@ function BudgetGoalRing({ label, current, target, monthlyRate, projectedDate, cl
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <Target size={16} className="mb-1 text-lavend" />
+          {emoji
+            ? <span className="mb-1 text-2xl leading-none">{emoji}</span>
+            : <Target size={16} className="mb-1 text-lavend" />
+          }
           <p className="font-serif text-xl font-bold leading-none text-ink">{Math.round(pct * 100)}%</p>
         </div>
       </div>
@@ -53,6 +60,12 @@ function BudgetGoalRing({ label, current, target, monthlyRate, projectedDate, cl
           <p className="font-sans text-[0.68rem] italic text-sage">On track for {projectedDate}</p>
         )}
       </div>
+
+      {showCta && (
+        <div className="flex items-center gap-1 font-sans text-xs font-semibold text-ink-3 transition-colors group-hover:text-ink">
+          Add to goal <ArrowRight size={11} />
+        </div>
+      )}
     </div>
   )
 }

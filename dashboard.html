@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Flo — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Lora:ital,wght@0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#FAF7F0;--paper2:#F4EFE4;--paper3:#EDE6D6;
+  --ink:#261E16;--ink2:#6E5C48;--ink3:#A89880;
+  --sage:#8FB89A;--sage2:#B8D4BF;--sage-p:#E8F2EA;
+  --peach:#E8A882;--peach2:#F2C4A8;--peach-p:#FDF0E8;
+  --lemon:#D4C44A;--lemon2:#E8D870;--lemon-p:#F8F5DC;
+  --lavend:#B4A8D4;--lavend-p:#F0EDF8;
+  --rose:#D4909A;--rose-p:#F8ECEE;
+  --border:rgba(42,33,24,.1);--border2:rgba(42,33,24,.18);
+  --neg:#C05050;--pos:#8FB89A;
+  --r:16px;--r2:24px;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden}
+
+/* ── GRAPH PAPER ── */
+.graph{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(42,33,24,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(42,33,24,.035) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.8rem 2rem;
+  background:rgba(250,247,240,.92);backdrop-filter:blur(14px);
+  border-bottom:1.5px solid var(--border);
+}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'Lora',serif;font-size:1.3rem;font-weight:700;color:var(--ink);letter-spacing:-.5px}
+.nav-logo svg{width:30px;height:30px;flex-shrink:0}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.nav-streak{display:flex;align-items:center;gap:5px;background:var(--lemon-p);border:1.5px solid var(--lemon2);border-radius:50px;padding:.3rem .75rem;font-size:.72rem;font-weight:700;color:var(--ink2)}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--sage-p);border:1.5px solid var(--sage2);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--sage);cursor:pointer}
+
+/* ── GUEST BANNER ── */
+.guest-banner{
+  position:fixed;top:57px;left:0;right:0;z-index:99;
+  background:var(--ink);
+  padding:.55rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;
+  animation:slideDown .4s ease both;
+}
+@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.gb-left{display:flex;align-items:center;gap:.6rem}
+.gb-dot{width:7px;height:7px;border-radius:50%;background:var(--lemon);animation:blink 2s ease infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.gb-text{font-size:.75rem;color:rgba(250,247,240,.75);font-weight:400}
+.gb-text strong{color:var(--paper);font-weight:600}
+.gb-btn{font-size:.72rem;font-weight:600;color:var(--lemon);background:rgba(212,196,74,.12);border:1px solid rgba(212,196,74,.3);padding:.28rem .8rem;border-radius:50px;cursor:pointer;white-space:nowrap;transition:background .2s}
+.gb-btn:hover{background:rgba(212,196,74,.2)}
+.gb-close{font-size:1rem;color:rgba(250,247,240,.35);cursor:pointer;padding:0 .25rem;line-height:1;flex-shrink:0;transition:color .2s}
+.gb-close:hover{color:rgba(250,247,240,.7)}
+
+/* ── MAIN ── */
+main{
+  position:relative;z-index:1;
+  min-height:100vh;
+  padding:7.5rem 2rem 4rem;
+  max-width:1100px;margin:0 auto;
+}
+
+/* ── WELCOME ── */
+.welcome{margin-bottom:2.5rem;animation:fadeUp .5s ease both}
+.welcome-eye{font-size:.68rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:7px;margin-bottom:.6rem}
+.welcome-eye::before{content:'';width:14px;height:1.5px;background:currentColor}
+.welcome-h{font-family:'Lora',serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-1px;color:var(--ink);line-height:1.15}
+.welcome-h em{font-style:italic;color:var(--sage)}
+.welcome-sub{font-size:.9rem;color:var(--ink3);font-style:italic;margin-top:.4rem;font-family:'Lora',serif}
+
+/* ── ACTION CARDS ── */
+.actions-label{font-size:.68rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:1rem;display:flex;align-items:center;gap:7px}
+.actions-label::before{content:'';width:14px;height:1.5px;background:currentColor}
+.actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem}
+
+.action-card{
+  background:white;border-radius:var(--r2);padding:1.6rem 1.4rem;
+  border:1.5px solid var(--border);
+  cursor:pointer;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  position:relative;overflow:hidden;
+  animation:fadeUp .5s ease both;
+  text-align:left;
+}
+.action-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:2px 2px 0 0}
+.ac-log::before{background:var(--sage)}
+.ac-budget::before{background:var(--lemon)}
+.ac-goal::before{background:var(--lavend)}
+.ac-insights::before{background:var(--peach)}
+.action-card:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(42,33,24,.1);border-color:var(--border2)}
+.action-card:nth-child(1){animation-delay:.05s}
+.action-card:nth-child(2){animation-delay:.1s}
+.action-card:nth-child(3){animation-delay:.15s}
+.action-card:nth-child(4){animation-delay:.2s}
+
+.ac-art{margin-bottom:1.1rem}
+.ac-title{font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.3rem}
+.ac-desc{font-size:.78rem;color:var(--ink2);line-height:1.55}
+.ac-cta{display:inline-flex;align-items:center;gap:4px;margin-top:.9rem;font-size:.72rem;font-weight:600;color:var(--ink3);transition:color .2s;background:none;border:none;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif}
+.action-card:hover .ac-cta{color:var(--ink)}
+
+/* ── STREAK STRIP ── */
+.streak-strip{
+  background:var(--lemon-p);border:1.5px solid var(--lemon2);
+  border-radius:var(--r2);padding:1.1rem 1.4rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;
+  animation:fadeUp .5s .25s ease both;
+}
+.ss-left{display:flex;align-items:center;gap:.8rem}
+.ss-fire{font-size:1.5rem;line-height:1}
+.ss-info{}
+.ss-num{font-family:'Lora',serif;font-size:1.4rem;font-weight:700;color:var(--ink);line-height:1}
+.ss-label{font-size:.72rem;color:var(--ink2);font-weight:500;margin-top:.1rem}
+.ss-days{display:flex;gap:5px}
+.ss-day{width:24px;height:24px;border-radius:7px;border:1.5px solid transparent}
+.ssd-on{background:var(--lemon);border-color:var(--lemon2)}
+.ssd-today{background:var(--sage);border-color:var(--sage2)}
+.ssd-off{background:white;border-color:var(--border)}
+.ss-msg{font-size:.78rem;color:var(--ink2);font-style:italic;font-family:'Lora',serif}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ── MODAL BACKDROP ── */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(42,33,24,.45);
+  backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+
+.modal{
+  background:var(--paper);
+  border-radius:var(--r2);
+  border:1.5px solid var(--border);
+  width:100%;max-width:460px;
+  box-shadow:0 24px 80px rgba(42,33,24,.2);
+  transform:translateY(24px) scale(.97);
+  transition:transform .28s ease,opacity .28s ease;
+  opacity:0;
+  overflow:hidden;
+  max-height:90vh;
+  overflow-y:auto;
+}
+.modal-backdrop.open .modal{transform:none;opacity:1}
+
+.modal-header{
+  padding:1.4rem 1.4rem 0;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:1rem;
+}
+.modal-title{font-family:'Lora',serif;font-size:1.3rem;font-weight:700;color:var(--ink);letter-spacing:-.5px}
+.modal-sub{font-size:.8rem;color:var(--ink3);margin-top:.2rem;font-style:italic}
+.modal-close{width:30px;height:30px;border-radius:50%;background:var(--paper2);border:none;cursor:pointer;font-size:1rem;color:var(--ink2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+.modal-close:hover{background:var(--paper3)}
+.modal-body{padding:1.2rem 1.4rem 1.4rem}
+
+/* ── FORM ELEMENTS ── */
+.field{margin-bottom:1rem}
+.field-label{font-size:.72rem;font-weight:600;color:var(--ink2);margin-bottom:.4rem;display:block;letter-spacing:.3px}
+.field-input{
+  width:100%;padding:.7rem .9rem;
+  background:white;border:1.5px solid var(--border);border-radius:var(--r);
+  font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--ink);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  appearance:none;
+}
+.field-input:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(143,184,154,.15)}
+.field-input::placeholder{color:var(--ink3)}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+
+/* Amount input */
+.amount-wrap{position:relative}
+.amount-sym{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);font-family:'Lora',serif;font-size:1rem;font-weight:700;color:var(--ink2)}
+.amount-input{padding-left:1.8rem;font-family:'Lora',serif;font-size:1.1rem;font-weight:700;color:var(--ink)}
+
+/* Category grid */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.4rem}
+.cat-chip{
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  padding:.6rem .4rem;border-radius:var(--r);border:1.5px solid var(--border);
+  background:white;cursor:pointer;transition:all .15s;font-size:.65rem;font-weight:600;color:var(--ink2);
+}
+.cat-chip:hover{border-color:var(--border2);background:var(--paper2)}
+.cat-chip.selected{border-color:var(--sage);background:var(--sage-p);color:var(--ink)}
+.cat-chip .emoji{font-size:1.2rem;line-height:1}
+
+/* Date row */
+.date-tabs{display:flex;gap:.4rem;margin-top:.4rem}
+.date-tab{padding:.4rem .85rem;border-radius:50px;border:1.5px solid var(--border);font-size:.72rem;font-weight:600;color:var(--ink2);cursor:pointer;background:white;transition:all .15s;font-family:'DM Sans',sans-serif}
+.date-tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* Submit button */
+.btn-submit{
+  width:100%;padding:.82rem;
+  background:var(--ink);color:var(--paper);
+  font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;
+  border:none;border-radius:50px;cursor:pointer;
+  transition:background .2s,transform .15s;
+  margin-top:1.2rem;
+}
+.btn-submit:hover{background:var(--ink2);transform:translateY(-1px)}
+
+/* Backend selector */
+.backend-opts{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.4rem}
+.backend-opt{
+  border:2px solid var(--border);border-radius:var(--r2);padding:1.2rem;
+  cursor:pointer;transition:all .2s;background:white;text-align:left;
+}
+.backend-opt:hover{border-color:var(--border2)}
+.backend-opt.selected-sheets{border-color:var(--sage);background:var(--sage-p)}
+.backend-opt.selected-cloud{border-color:var(--lavend);background:var(--lavend-p)}
+.bo-icon{font-size:1.6rem;display:block;margin-bottom:.5rem}
+.bo-name{font-size:.85rem;font-weight:700;color:var(--ink);display:block}
+.bo-desc{font-size:.7rem;color:var(--ink3);margin-top:.2rem;line-height:1.5}
+
+/* Budget category list */
+.budget-cats{display:flex;flex-direction:column;gap:.5rem;margin-top:.4rem}
+.budget-cat-row{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;background:white;border-radius:var(--r);border:1.5px solid var(--border)}
+.bcr-emoji{font-size:1rem}
+.bcr-name{font-size:.82rem;font-weight:600;color:var(--ink);flex:1}
+.bcr-input{width:80px;padding:.3rem .5rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--ink);text-align:right;outline:none}
+.bcr-input:focus{border-color:var(--sage)}
+
+/* Empty insights */
+.insights-empty{text-align:center;padding:1.5rem 1rem}
+.ie-art{margin:0 auto 1.2rem}
+.ie-title{font-family:'Lora',serif;font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:.4rem}
+.ie-desc{font-size:.82rem;color:var(--ink2);line-height:1.65;max-width:280px;margin:0 auto}
+.ie-cta{display:inline-flex;align-items:center;gap:6px;margin-top:1.2rem;padding:.65rem 1.4rem;background:var(--ink);color:var(--paper);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;border:none;border-radius:50px;cursor:pointer;transition:background .2s}
+.ie-cta:hover{background:var(--ink2)}
+
+/* Savings goal */
+.goal-preview{background:var(--sage-p);border:1.5px solid var(--sage2);border-radius:var(--r);padding:1rem;margin-top:.75rem;display:flex;align-items:center;gap:.9rem}
+.gp-ring{flex-shrink:0}
+.gp-info{}
+.gp-title{font-size:.78rem;font-weight:700;color:var(--ink)}
+.gp-sub{font-size:.7rem;color:var(--ink2);margin-top:.2rem}
+
+/* Toast notification */
+.toast-notif{
+  position:fixed;bottom:2rem;right:2rem;z-index:300;
+  background:var(--ink);color:var(--paper);
+  border-radius:var(--r2);padding:1rem 1.2rem;
+  display:flex;align-items:flex-start;gap:.75rem;
+  box-shadow:0 12px 40px rgba(42,33,24,.25);
+  max-width:300px;
+  transform:translateY(120%);opacity:0;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;
+  pointer-events:none;
+}
+.toast-notif.show{transform:none;opacity:1;pointer-events:all}
+.tn-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px}
+.tn-body{}
+.tn-title{font-size:.8rem;font-weight:600;color:var(--paper);display:block;margin-bottom:2px}
+.tn-msg{font-size:.72rem;color:rgba(250,247,240,.65);line-height:1.5}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .actions-grid{grid-template-columns:1fr 1fr}
+  nav{padding:.75rem 1.25rem}
+  main{padding:8.5rem 1.25rem 3rem}
+  .guest-banner{padding:.5rem 1.25rem}
+  .gb-text{font-size:.68rem}
+  .ss-days{display:none}
+}
+@media(max-width:420px){
+  .actions-grid{grid-template-columns:1fr}
+  .field-row{grid-template-columns:1fr}
+  .cat-grid{grid-template-columns:repeat(3,1fr)}
+  .backend-opts{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="graph"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index_v3.html" class="nav-logo">
+    <svg viewBox="0 0 30 30" fill="none">
+      <rect width="30" height="30" rx="8" fill="#E8F2EA"/>
+      <path d="M15 6C15 6 7 11 7 18C7 22.5 10.5 24.5 15 24.5C19.5 24.5 23 22.5 23 18C23 11 15 6 15 6Z" fill="#8FB89A"/>
+      <path d="M15 11.5L15 24" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M15 17C12.5 15.5 10 16.5 9.5 18" stroke="white" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+      <path d="M15 14C17.5 12.5 20 13.5 20.5 15.5" stroke="white" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+    </svg>
+    Flo
+  </a>
+  <div class="nav-right">
+    <div class="nav-streak">🔥 Day 1</div>
+    <div class="nav-avatar" title="Guest mode">G</div>
+  </div>
+</nav>
+
+<!-- GUEST BANNER -->
+<div class="guest-banner" id="guestBanner">
+  <div class="gb-left">
+    <div class="gb-dot"></div>
+    <div class="gb-text"><strong>You're in guest mode.</strong> Your data lives here for now — choose where to save it before you leave.</div>
+  </div>
+  <button class="gb-btn" onclick="openModal('backendModal')">Choose storage →</button>
+  <span class="gb-close" onclick="dismissBanner()">✕</span>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- Welcome -->
+  <div class="welcome">
+    <div class="welcome-eye">Good morning</div>
+    <h1 class="welcome-h">Nothing logged yet.<br/><em>Every journey starts somewhere.</em></h1>
+    <p class="welcome-sub">Even just a coffee counts. What do you want to do?</p>
+  </div>
+
+  <!-- Action cards -->
+  <div class="actions-label">Quick actions</div>
+  <div class="actions-grid">
+
+    <div class="action-card ac-log" onclick="openModal('logModal')">
+      <div class="ac-art">
+        <!-- Receipt / pen SVG -->
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="12" fill="#E8F2EA"/>
+          <rect x="11" y="9" width="18" height="22" rx="3" fill="white" stroke="#8FB89A" stroke-width="1.5"/>
+          <line x1="15" y1="15" x2="25" y2="15" stroke="#8FB89A" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="19" x2="22" y2="19" stroke="#B8D4BF" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="15" y1="23" x2="23" y2="23" stroke="#B8D4BF" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="28" cy="28" r="7" fill="#8FB89A"/>
+          <line x1="28" y1="25" x2="28" y2="31" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="25" y1="28" x2="31" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="ac-title">Log an expense</div>
+      <div class="ac-desc">Record what you spent. Takes about 5 seconds. Seriously.</div>
+      <button class="ac-cta">Add entry →</button>
+    </div>
+
+    <div class="action-card ac-budget" onclick="openModal('budgetModal')">
+      <div class="ac-art">
+        <!-- Budget / target SVG -->
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="12" fill="#F8F5DC"/>
+          <circle cx="20" cy="20" r="10" fill="none" stroke="#E8D870" stroke-width="2"/>
+          <circle cx="20" cy="20" r="6" fill="none" stroke="#D4C44A" stroke-width="2"/>
+          <circle cx="20" cy="20" r="2.5" fill="#D4C44A"/>
+          <line x1="27" y1="13" x2="30" y2="10" stroke="#D4C44A" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="ac-title">Set a budget</div>
+      <div class="ac-desc">Tell Flo your monthly limits. It'll nudge you before things go sideways.</div>
+      <button class="ac-cta">Set limits →</button>
+    </div>
+
+    <div class="action-card ac-goal" onclick="openModal('goalModal')">
+      <div class="ac-art">
+        <!-- Savings jar SVG -->
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="12" fill="#F0EDF8"/>
+          <rect x="13" y="16" width="14" height="15" rx="4" fill="white" stroke="#B4A8D4" stroke-width="1.5"/>
+          <rect x="15" y="13" width="10" height="4" rx="2" fill="#B4A8D4"/>
+          <path d="M16 23 Q20 26 24 23" stroke="#B4A8D4" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <circle cx="20" cy="20" r="1.5" fill="#D4C4E8"/>
+        </svg>
+      </div>
+      <div class="ac-title">Savings goal</div>
+      <div class="ac-desc">Working toward something? Set a target and watch the ring fill up.</div>
+      <button class="ac-cta">Create goal →</button>
+    </div>
+
+    <div class="action-card ac-insights" onclick="openModal('insightsModal')">
+      <div class="ac-art">
+        <!-- Chart SVG -->
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="12" fill="#FDF0E8"/>
+          <rect x="11" y="24" width="4" height="7" rx="1.5" fill="#F2C4A8"/>
+          <rect x="18" y="18" width="4" height="13" rx="1.5" fill="#E8A882"/>
+          <rect x="25" y="13" width="4" height="18" rx="1.5" fill="#D4906A"/>
+          <line x1="10" y1="32" x2="30" y2="32" stroke="#E8A882" stroke-width="1" opacity=".5"/>
+        </svg>
+      </div>
+      <div class="ac-title">View insights</div>
+      <div class="ac-desc">Charts, trends, breakdowns. More useful once you've logged a few things.</div>
+      <button class="ac-cta">Explore →</button>
+    </div>
+
+  </div>
+
+  <!-- Streak strip -->
+  <div class="streak-strip">
+    <div class="ss-left">
+      <div class="ss-fire">🔥</div>
+      <div class="ss-info">
+        <div class="ss-num">Day 1</div>
+        <div class="ss-label">Start your streak today</div>
+      </div>
+    </div>
+    <div class="ss-days">
+      <div class="ss-day ssd-today" title="Today"></div>
+      <div class="ss-day ssd-off"></div>
+      <div class="ss-day ssd-off"></div>
+      <div class="ss-day ssd-off"></div>
+      <div class="ss-day ssd-off"></div>
+      <div class="ss-day ssd-off"></div>
+      <div class="ss-day ssd-off"></div>
+    </div>
+    <div class="ss-msg">Log something today to begin the chain.</div>
+  </div>
+
+</main>
+
+<!-- ═══ MODAL: Log Expense ═══ -->
+<div class="modal-backdrop" id="logModal" onclick="closeOnBackdrop(event,'logModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Log an expense</div>
+        <div class="modal-sub">Even just a coffee counts.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('logModal')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field">
+        <label class="field-label">Amount</label>
+        <div class="amount-wrap">
+          <span class="amount-sym">$</span>
+          <input class="field-input amount-input" type="number" placeholder="0.00" step="0.01" min="0" id="logAmount"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Category</label>
+        <div class="cat-grid">
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">☕</span>Food</div>
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">🚌</span>Transport</div>
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">🏠</span>Rent</div>
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">🎮</span>Fun</div>
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">💊</span>Health</div>
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">🛒</span>Groceries</div>
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">💼</span>Income</div>
+          <div class="cat-chip" onclick="selectCat(this)"><span class="emoji">✨</span>Other</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Note <span style="color:var(--ink3);font-weight:400">(optional)</span></label>
+        <input class="field-input" type="text" placeholder="Morning coffee at Blue Tokai…"/>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Date</label>
+        <div class="date-tabs">
+          <button class="date-tab active" onclick="selectDate(this)">Today</button>
+          <button class="date-tab" onclick="selectDate(this)">Yesterday</button>
+          <button class="date-tab" onclick="selectDate(this)">Pick date</button>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="submitLog()">Save entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Set Budget ═══ -->
+<div class="modal-backdrop" id="budgetModal" onclick="closeOnBackdrop(event,'budgetModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Set a budget</div>
+        <div class="modal-sub">Set monthly limits by category. We'll warn you before you overshoot.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('budgetModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">Monthly limits</label>
+        <div class="budget-cats">
+          <div class="budget-cat-row">
+            <span class="bcr-emoji">☕</span>
+            <span class="bcr-name">Food & Dining</span>
+            <input class="bcr-input" type="number" placeholder="400"/>
+          </div>
+          <div class="budget-cat-row">
+            <span class="bcr-emoji">🚌</span>
+            <span class="bcr-name">Transport</span>
+            <input class="bcr-input" type="number" placeholder="150"/>
+          </div>
+          <div class="budget-cat-row">
+            <span class="bcr-emoji">🎮</span>
+            <span class="bcr-name">Entertainment</span>
+            <input class="bcr-input" type="number" placeholder="100"/>
+          </div>
+          <div class="budget-cat-row">
+            <span class="bcr-emoji">💊</span>
+            <span class="bcr-name">Health</span>
+            <input class="bcr-input" type="number" placeholder="200"/>
+          </div>
+          <div class="budget-cat-row">
+            <span class="bcr-emoji">✨</span>
+            <span class="bcr-name">Other</span>
+            <input class="bcr-input" type="number" placeholder="—"/>
+          </div>
+        </div>
+      </div>
+      <button class="btn-submit" onclick="submitBudget()">Save budgets</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Savings Goal ═══ -->
+<div class="modal-backdrop" id="goalModal" onclick="closeOnBackdrop(event,'goalModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Create a savings goal</div>
+        <div class="modal-sub">Give your money somewhere to go.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('goalModal')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field">
+        <label class="field-label">Goal name</label>
+        <input class="field-input" type="text" placeholder="Emergency fund, Japan trip, New laptop…" id="goalName" oninput="updateGoalPreview()"/>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Target amount</label>
+          <div class="amount-wrap">
+            <span class="amount-sym">$</span>
+            <input class="field-input amount-input" type="number" placeholder="10,000" id="goalTarget" oninput="updateGoalPreview()"/>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Monthly contribution</label>
+          <div class="amount-wrap">
+            <span class="amount-sym">$</span>
+            <input class="field-input amount-input" type="number" placeholder="500" id="goalMonthly" oninput="updateGoalPreview()"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="goal-preview" id="goalPreview">
+        <svg class="gp-ring" width="52" height="52" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="20" fill="none" stroke="#E8F2EA" stroke-width="7"/>
+          <circle cx="26" cy="26" r="20" fill="none" stroke="#8FB89A" stroke-width="7"
+            stroke-dasharray="0 126" stroke-dashoffset="0" stroke-linecap="round"
+            transform="rotate(-90 26 26)" id="goalRingFill"/>
+          <circle cx="26" cy="26" r="13" fill="white"/>
+          <text x="26" y="30" text-anchor="middle" font-family="'Lora',serif" font-size="9" font-weight="700" fill="#261E16" id="goalPct">0%</text>
+        </svg>
+        <div class="gp-info">
+          <div class="gp-title" id="goalPreviewName">Your goal</div>
+          <div class="gp-sub" id="goalPreviewSub">Enter a target and monthly amount to see your projection.</div>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="submitGoal()">Create goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Insights ═══ -->
+<div class="modal-backdrop" id="insightsModal" onclick="closeOnBackdrop(event,'insightsModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Insights</div>
+        <div class="modal-sub">Your money, visualised.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('insightsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="insights-empty">
+        <!-- Empty state plant art -->
+        <svg class="ie-art" width="90" height="110" viewBox="0 0 90 110" fill="none">
+          <ellipse cx="45" cy="105" rx="22" ry="5" fill="var(--paper3)" opacity=".6"/>
+          <rect x="36" y="82" width="18" height="22" rx="4" fill="var(--peach2)" opacity=".5"/>
+          <ellipse cx="45" cy="82" rx="11" ry="4" fill="var(--peach2)" opacity=".7"/>
+          <path d="M45 82L45 48" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M45 65C34 60 26 47 31 38C36 29 46 34 45 47" fill="var(--sage-p)" stroke="var(--sage2)" stroke-width="1"/>
+          <path d="M45 56C56 50 66 54 63 64" fill="var(--sage-p)" stroke="var(--sage2)" stroke-width="1"/>
+          <circle cx="31" cy="38" r="3" fill="var(--sage2)"/>
+          <circle cx="63" cy="64" r="2.5" fill="var(--sage2)"/>
+        </svg>
+        <div class="ie-title">Nothing to show yet.</div>
+        <div class="ie-desc">Log a few expenses first and Flo will start making sense of your spending. Charts are more fun with data in them.</div>
+        <button class="ie-cta" onclick="closeModal('insightsModal');setTimeout(()=>openModal('logModal'),200)">Log your first entry →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Backend Selector ═══ -->
+<div class="modal-backdrop" id="backendModal" onclick="closeOnBackdrop(event,'backendModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Where should your data live?</div>
+        <div class="modal-sub">You can switch anytime. Zero lock-in.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('backendModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">Choose your storage</label>
+        <div class="backend-opts">
+          <div class="backend-opt" id="bo-sheets" onclick="selectBackend('sheets')">
+            <span class="bo-icon">📊</span>
+            <span class="bo-name">Google Sheets</span>
+            <div class="bo-desc">Your data, your spreadsheet. We're just the UI.</div>
+          </div>
+          <div class="backend-opt" id="bo-cloud" onclick="selectBackend('cloud')">
+            <span class="bo-icon">☁️</span>
+            <span class="bo-name">Flo Cloud</span>
+            <div class="bo-desc">Fast, synced, secure. Still export whenever.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:.5rem;padding:.8rem;background:var(--paper2);border-radius:var(--r);font-size:.75rem;color:var(--ink2);line-height:1.55;font-style:italic">
+        Either way, your data is always exportable. We don't believe in trapping you.
+      </div>
+      <button class="btn-submit" id="backendSubmit" onclick="submitBackend()" style="opacity:.5;pointer-events:none">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-notif" id="toast">
+  <div class="tn-icon" id="toastIcon">🎉</div>
+  <div class="tn-body">
+    <span class="tn-title" id="toastTitle">Nice one!</span>
+    <span class="tn-msg" id="toastMsg">Entry saved.</span>
+  </div>
+</div>
+
+<script>
+// Modal open/close
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeOnBackdrop(e,id){
+  if(e.target===document.getElementById(id)) closeModal(id);
+}
+
+// Guest banner
+function dismissBanner(){
+  const b=document.getElementById('guestBanner');
+  b.style.transition='opacity .3s ease';
+  b.style.opacity='0';
+  setTimeout(()=>b.style.display='none',300);
+}
+
+// Category select
+function selectCat(el){
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// Date tabs
+function selectDate(el){
+  document.querySelectorAll('.date-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Backend select
+let selectedBackend=null;
+function selectBackend(type){
+  selectedBackend=type;
+  document.getElementById('bo-sheets').className='backend-opt'+(type==='sheets'?' selected-sheets':'');
+  document.getElementById('bo-cloud').className='backend-opt'+(type==='cloud'?' selected-cloud':'');
+  const btn=document.getElementById('backendSubmit');
+  btn.style.opacity='1';btn.style.pointerEvents='auto';
+}
+
+// Toast
+function showToast(icon,title,msg){
+  document.getElementById('toastIcon').textContent=icon;
+  document.getElementById('toastTitle').textContent=title;
+  document.getElementById('toastMsg').textContent=msg;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// Submit handlers
+function submitLog(){
+  const amt=document.getElementById('logAmount').value;
+  if(!amt){document.getElementById('logAmount').focus();return}
+  closeModal('logModal');
+  // Update streak
+  document.querySelector('.nav-streak').textContent='🔥 Day 1 ✓';
+  document.querySelector('.ssd-today').style.background='var(--lemon)';
+  showToast('✓','Entry saved!','Coffee logged. Streak starts today.');
+}
+function submitBudget(){
+  closeModal('budgetModal');
+  showToast('🎯','Budgets set!','Flo will keep an eye on things.');
+}
+function submitGoal(){
+  const name=document.getElementById('goalName').value||'Your goal';
+  closeModal('goalModal');
+  showToast('🌱',name+' created!','Watch the ring fill up.');
+}
+function submitBackend(){
+  const label=selectedBackend==='sheets'?'Google Sheets':'Flo Cloud';
+  closeModal('backendModal');
+  dismissBanner();
+  showToast('✓','Storage set to '+label,'Your data has a home now.');
+}
+
+// Goal ring preview
+function updateGoalPreview(){
+  const name=document.getElementById('goalName').value||'Your goal';
+  const target=parseFloat(document.getElementById('goalTarget').value)||0;
+  const monthly=parseFloat(document.getElementById('goalMonthly').value)||0;
+  document.getElementById('goalPreviewName').textContent=name;
+  if(target>0&&monthly>0){
+    const months=Math.ceil(target/monthly);
+    const yrs=Math.floor(months/12);
+    const mos=months%12;
+    const label=yrs>0?yrs+'y '+(mos>0?mos+'m':''):mos+'m';
+    document.getElementById('goalPreviewSub').textContent='At $'+monthly.toLocaleString()+'/mo — done in ~'+label;
+    // Ring
+    const circ=2*Math.PI*20;
+    const pct=Math.min(monthly/target,1);
+    document.getElementById('goalRingFill').setAttribute('stroke-dasharray',pct*circ+' '+(circ-(pct*circ)));
+    document.getElementById('goalPct').textContent=Math.round(pct*100)+'%';
+  } else {
+    document.getElementById('goalPreviewSub').textContent='Enter a target and monthly amount to see your projection.';
+    document.getElementById('goalRingFill').setAttribute('stroke-dasharray','0 126');
+    document.getElementById('goalPct').textContent='0%';
+  }
+}
+
+// Keyboard close
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-backdrop.open').forEach(m=>closeModal(m.id));
+  }
+});
+</script>
+</body>
+</html>
