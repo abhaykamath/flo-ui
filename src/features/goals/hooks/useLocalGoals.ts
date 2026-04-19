@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Goal, Contribution } from '@/types/goal'
+import type { Goal, GoalStatus, Contribution } from '@/types/goal'
 import type { GoalFormData } from '../goalSchema'
 import type { ContributionFormData } from '../contributionSchema'
 
@@ -10,11 +10,11 @@ function readGoals(): Goal[] {
   try {
     const raw = localStorage.getItem(GOALS_KEY)
     if (!raw) return []
-    const goals = JSON.parse(raw) as Array<Goal & { status: string }>
+    const goals = JSON.parse(raw) as Array<Omit<Goal, 'status'> & { status: string }>
     // Migrate legacy 'active'/'completed'/'abandoned' statuses
     return goals.map(g => ({
       ...g,
-      status: g.status === 'complete' || g.status === 'completed' ? 'complete' : 'open',
+      status: (g.status === 'complete' || g.status === 'completed' ? 'complete' : 'open') as GoalStatus,
     }))
   } catch {
     return []

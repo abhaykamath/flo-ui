@@ -191,8 +191,7 @@ interface Step3Props {
 }
 
 function Step3({ form, onBack, isSubmitting }: Step3Props) {
-  const { register, control, watch } = form
-  const deadlineValue = watch('deadline') ?? ''
+  const { register, control } = form
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
