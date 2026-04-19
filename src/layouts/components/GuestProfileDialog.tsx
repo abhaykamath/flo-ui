@@ -43,6 +43,7 @@ interface GuestProfileContentProps {
   entryCount: number
   lastActivity: string | null
   CloseButton: React.ReactNode
+  onClose: () => void
 }
 
 function GuestProfileContent({
@@ -50,6 +51,7 @@ function GuestProfileContent({
   entryCount,
   lastActivity,
   CloseButton,
+  onClose,
 }: GuestProfileContentProps) {
   return (
     <>
@@ -120,6 +122,13 @@ function GuestProfileContent({
         >
           Create a free account
         </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="w-full rounded-xl border border-border bg-paper-2 py-3 font-sans text-[0.85rem] font-medium text-ink-2 transition-colors hover:bg-paper-3"
+        >
+          I'm good for now
+        </button>
 
       </div>
     </>
@@ -161,6 +170,7 @@ export function GuestProfileDialog({ open, onOpenChange, streakCount }: GuestPro
           <div className="max-h-[92vh] overflow-y-auto pb-4">
             <GuestProfileContent
               {...sharedProps}
+              onClose={() => onOpenChange(false)}
               CloseButton={
                 <SheetClose asChild>
                   <button
@@ -183,6 +193,7 @@ export function GuestProfileDialog({ open, onOpenChange, streakCount }: GuestPro
       <DialogContent className="max-w-[420px] p-0">
         <GuestProfileContent
           {...sharedProps}
+          onClose={() => onOpenChange(false)}
           CloseButton={
             <DialogClose asChild>
               <button
